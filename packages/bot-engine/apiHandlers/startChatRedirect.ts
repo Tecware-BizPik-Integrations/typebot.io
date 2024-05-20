@@ -14,6 +14,10 @@ type Props = {
 export const startChatRedirect = async (props: Props) => {
   const res: any = await startChat(props)
 
+  if (!props.shouldRedirect) {
+    return res;
+  }
+
   const urlToNotify = process.env.CREATE_CHAT_NOTIFY_URL
 
   if (!urlToNotify) {

@@ -14,6 +14,7 @@ export const continueChat = publicProcedure
   .input(
     z.object({
       message: z.string().optional(),
+      shouldRedirect: z.boolean().optional().default(true),
       sessionId: z
         .string()
         .describe(
@@ -22,12 +23,18 @@ export const continueChat = publicProcedure
     })
   )
   .output(continueChatResponseSchema)
-  .mutation(async ({ input: { sessionId, message }, ctx: { origin, res } }) => {
-    const { corsOrigin, ...response } = await continueChatFn({
-      origin,
-      sessionId,
-      message,
-    })
-    if (corsOrigin) res.setHeader('Access-Control-Allow-Origin', corsOrigin)
-    return response
-  })
+  .mutation(
+    async ({
+      input: { sessionId, message, shouldRedirect },
+      ctx: { origin, res },
+    }) => {
+      const { corsOrigin, ...response } = await continueChatFn({
+        origin,
+        sessionId,
+        shouldRedirect,
+        message,
+      })
+      if (corsOrigin) res.setHeader('Access-Control-Allow-Origin', corsOrigin)
+      return response
+    }
+  )
