@@ -193,6 +193,11 @@ export const startChatInputSchema = z.object({
     .string()
     .optional()
     .describe("Provide it if you'd like to overwrite an existing result."),
+  shouldRedirect: z
+    .boolean()
+    .optional()
+    .default(true)
+    .describe("Indicates if the bot response will be redirect to some other url"),
   isOnlyRegistering: z
     .boolean()
     .optional()
