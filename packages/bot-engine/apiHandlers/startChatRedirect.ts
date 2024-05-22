@@ -1,3 +1,5 @@
+import { ChatTopicsTypes } from "./sns/chatTopicsTypes"
+import { deliveryChatMessage } from "./sns/deliveryChatMessage"
 import { startChat } from "./startChat"
 
 type Props = {
@@ -12,7 +14,7 @@ type Props = {
 }
 
 export const startChatRedirect = async (props: Props) => {
-  const res: any = await startChat(props)
+  const res = await startChat(props)
 
   if (!props.shouldRedirect) {
     return res;
@@ -24,18 +26,7 @@ export const startChatRedirect = async (props: Props) => {
     return res;
   }
 
-  const { corsOrigin } = res;
-
-  const fetchData = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': corsOrigin,
-    },
-    body: JSON.stringify(res),
-  };
-
-  await fetch(urlToNotify, fetchData)
+  await deliveryChatMessage(ChatTopicsTypes.NEW_CHAT, res)
 
   return res;
 }
